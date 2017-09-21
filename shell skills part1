@@ -1,0 +1,86 @@
+1.1 巧设menu菜单 design by fuyin
+#使用重定向方式,避免了各种echo
+
+function () {
+	cat << EOF
+    	1.configuration
+    	2.running
+  	EOF
+	read -p "please check one:" select1
+}
+
+1.2 设置检查函数
+#可以直接复用了,检查上次命令是否执行成功
+
+function checkfunc(){
+	if [[ $? -eq 0 ]]; then
+    	echo "operation successfukky!"
+  	else
+    	echo -e "\e033[41mopearation Failed\033[0m"
+  	fi
+}
+
+1.3 巧用case选择
+#case适用于功能分布式编程
+
+case $select1 in
+	1)
+		checkfunc
+    	break
+	;;
+	2)
+		checkfunc
+		exit
+esac
+
+#############################################################################################################################
+
+2.1巧用<<EOF格式
+#cat即时编写内容
+cat > dmgr.txt << EOF
+create
+profileNale=Dmgr
+enablbedAdminDecurity=true
+EOF
+
+#ssh远程执行多个命令,当然可以使用双引号逐行写命令
+ssh -oStrictHostKeyChecking=no root@ip <<EOF
+hostname
+ip a
+EOF
+
+#su切换用户执行命令
+su - jbossuser -c "command"
+su - jbossuser << EOF
+hostname
+ip a
+EOF
+
+2.2巧用正则
+#~波浪符代表家目录和开启正则匹配
+if [[ $ip =~ ^10.104 ]];then
+	echo "ok"
+fi
+
+awk '$1 ~ /^a/ {print $2}'
+
+2.3理解免密登录的权限问题
+#私钥不动,公钥出行.被验证用户的公钥给人家
+chmod 700 ~/.ssh
+chmod 644 ~/.ssh/authorized_keys
+ssh-keygen -t rsa
+scp ~/.ssh/id_rsa.pub u@ip:~/.ssh/id_rsa.pub
+
+2.4理解while循环的吃行问题
+#while循环读取ip.conf文件时,如果循环体中的内容可以从标准输入中读数据则会出现吃行问题,此时,要明确指定这种命令从/deb/null中标准输入
+
+while read line;
+do
+ssh -n user@ip "command"
+done < ip.conf
+
+ssh -oStrictHostKeyChecking=no user@ip "command" < /dev/null
+
+############################################################################################################################
+
+此整理是在拜读公司大神(已励志,未谋面,膜拜)的脚本后整理的思路,适合刚入职的道友
