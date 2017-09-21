@@ -1,0 +1,22 @@
+1.1 巧用python加载shell命令
+#run函数可以返回cmd在shell中的执行结果
+#!/usr/bin/python
+import os
+def run(user,ip,cmd):
+	cmd = """ssh %s@$s "%s" """ % (user,ip,cmd)
+	out = os.popen(cmd).readlines()
+	return out
+	
+1.2 巧用python的with语句
+#with适用于对资源进行访问的场合,确保不管过程中是否发生异常都会执行必要的清理操作,as后面的对象只能是单变量或者元组
+with open('file') as target[s]:
+	for line in target:
+		user = line.strip('\r\n').split(' ')[0]
+		ip = line.strip('\r\n').split(' ')[1]
+		if ip.startwith('#'):
+			pass
+		else:
+			print "ok"
+
+###############################################################################################################################
+总结与公司离职大神fuyin脚本思路
