@@ -1,2 +1,3 @@
 # ourshell
-record the  shell scripts
+record the  shell or python scripts
+make your mind brillian
